@@ -2,11 +2,16 @@
 <?php
 
 if ($argc < 3) {
-    die("Syntax: distance.php [zip] [miles])\n");
+    die("Syntax: distance.php [zip] [miles] {population})\n");
 }
 
 $startZip = $argv[1];
 $maxDistance = (int) $argv[2];
+if (!empty($argv[3])) {
+    $minPop = (int) $argv[3];
+} else {
+    $minPop = 0;
+}
 
 define('MILES_PER_KM', 0.6213712);
 define('ZIP', 0);
@@ -25,7 +30,9 @@ uasort($zips, 'distanceSort');
 
 // Loop through them
 foreach($zips as $zip) {
-    echo "{$zip[ZIP]}\t{$zip[DIST]}\t{$zip[CITY]}, {$zip[STATE]}\t{$zip[POPULATION]}\n";
+    if ($zip[POPULATION] > $minPop) {
+        echo "{$zip[ZIP]}\t{$zip[DIST]}\t{$zip[CITY]}, {$zip[STATE]}\t{$zip[POPULATION]}\n";
+    }
     if ($zip[DIST] > $maxDistance) break;
 }
 
